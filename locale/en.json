@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "macOS compact sidebar",
+    "description": "For the macOS desktop app: replaces the sidebar brand row with one row of four equal buttons (New session, Plugins, Scheduled tasks, More) and tightens the workspace list so more conversations fit. Browser and Windows layouts are left untouched."
+  }
+}

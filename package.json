@@ -1,0 +1,50 @@
+{
+  "name": "dsh-sidebar-compact-macos",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "For the macOS desktop app: four equal sidebar action buttons instead of the brand row, plus a denser workspace and conversation list.",
+  "license": "MIT",
+  "author": "627666",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/627666/dsh-sidebar-compact-macos.git"
+  },
+  "homepage": "https://github.com/627666/dsh-sidebar-compact-macos#readme",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "sidebar",
+    "macos"
+  ],
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "README.md",
+    "LICENSE",
+    "screenshots.json",
+    "assets/*"
+  ],
+  "engines": {
+    "dsh": ">=0.2.2-rc.1 <0.3.0-0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": []
+    }
+  }
+}
