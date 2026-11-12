@@ -1,20 +1,25 @@
 /**
  * Client half of the sidebar-compact plugin.
  *
- * The shipped sidebar stacks a brand row, a New Session row and the global panel
- * rows above the workspace/session browser. This client half keeps the native
- * window-chrome strip (it owns the collapse toggle), drops the brand row, and
- * re-lays the existing New Session / Plugins / Scheduled tasks / More controls
- * into ONE horizontal row of four equal bordered buttons. It also tightens the
- * workspace section header, workspace rows, session rows and their gaps so the
- * sidebar fits more conversations.
+ * DeepSeek Harness 0.2.2-rc.2 restructured the expanded sidebar: the panel list
+ * and the workspace browser now live inside a `scrollRegion` / `scrollArea`
+ * grid instead of being direct children of the sidebar column. This version
+ * targets that layout:
  *
- * It is intentionally CSS-only: every button keeps its original element,
- * handler, locale string and accessibility wiring, so behavior cannot drift.
- * Selectors use the stable local-name suffix of the host's CSS-module class
- * names (for example `_panelRow`); if a future host build renames those local
- * names the overrides stop applying and the stock sidebar returns, which is a
- * safe fallback.
+ *  - the brand mark is absolutely positioned in the 52 px title-bar strip, to
+ *    the right of the native traffic lights and left of the collapse toggle;
+ *  - the action row is rebuilt as a fixed 48 px grid row inside the sidebar's
+ *    new scroll area: New session is absolutely overlaid on the first quarter,
+ *    and the panel list is offset by that quarter and laid out as three equal
+ *    buttons (Plugins, Scheduled tasks, More);
+ *  - the workspace browser below keeps its own scroll container and only gets
+ *    denser spacing.
+ *
+ * Every control keeps its original host element, handler, locale string and
+ * accessibility wiring, so behavior cannot drift. Selectors use stable local
+ * class-name suffixes (for example `_panelRow`) and the rc.2 workspace header's
+ * data attribute; if a future host build renames those, the overrides stop
+ * applying and the stock sidebar returns, which is a safe fallback.
  *
  * Scope: the expanded sidebar of the macOS desktop window (`data-platform` is
  * set by the desktop preload). A browser tab has no `data-platform` marker and
@@ -26,24 +31,13 @@ window.__ModuleLoader__.load({
     const SCOPE =
       'html[data-platform="darwin"] div[class*="_root"]:not([class*="_collapsed"]):has(> div[class*="_topStrip"])'
     const CSS = `
-/* Grid rows: title-bar strip | four-button row | workspace region | footer. */
+/* Sidebar column keeps its flex flow; the brand row is lifted out of it. */
 ${SCOPE} {
   position: relative !important;
-  display: grid !important;
-  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-  grid-template-rows: auto auto minmax(0, 1fr) auto !important;
-  column-gap: 4px !important;
-  row-gap: 0 !important;
 }
 
-/* Keep the drag / collapse strip in its row. */
-${SCOPE} > div[class*="_topStrip"] {
-  grid-row: 1 !important;
-  grid-column: 1 / -1 !important;
-}
-
-/* Brand mark back in the title-bar strip, to the right of the traffic lights and
-   clear of the collapse toggle. Absolute so the button row below never moves. */
+/* Brand back in the title-bar strip, right of the traffic lights, left of the
+   collapse toggle. Absolute, so no row below moves. */
 ${SCOPE} > div[class*="_logoRow"] {
   display: flex !important;
   position: absolute !important;
@@ -68,12 +62,13 @@ ${SCOPE} > div[class*="_logoRow"] > span[class*="_brand"] {
   transform-origin: left center !important;
 }
 
-/* Cell 1: New session, as a compact bordered button with icon above label. */
+/* Action cell 1: New session, overlaid on the first quarter of the fixed action
+   row (top 52 px = below the title-bar strip; width = one of four grid cells). */
 ${SCOPE} > button[class*="_newSession"] {
-  grid-row: 2 !important;
-  grid-column: 1 !important;
-  box-sizing: border-box !important;
-  width: 100% !important;
+  position: absolute !important;
+  top: 52px !important;
+  left: 8px !important;
+  width: calc((100% - 28px) / 4) !important;
   height: 48px !important;
   min-height: 0 !important;
   margin: 0 !important;
@@ -89,6 +84,7 @@ ${SCOPE} > button[class*="_newSession"] {
   align-items: center !important;
   gap: 2px !important;
   overflow: hidden !important;
+  z-index: 3 !important;
 }
 ${SCOPE} > button[class*="_newSession"] > span[class*="_newSessionLabelMask"] {
   flex: 0 0 auto !important;
@@ -119,29 +115,54 @@ ${SCOPE} > button[class*="_newSession"]:hover {
   background: var(--dsw-alias-interactive-bg-hover) !important;
 }
 
-/* Cells 2-4: Plugins, Scheduled tasks and the More launcher as equal thirds. */
-${SCOPE} > nav[class*="_panelList"] {
-  grid-row: 2 !important;
-  grid-column: 2 / -1 !important;
-  display: grid !important;
-  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+/* The new rc.2 scrolling shell: give it exactly two rows — the 48 px action row
+   and the browsing region — and keep the scrollbar for the workspace list. */
+${SCOPE} > div[class*="_scrollRegion"] {
+  margin-top: 0 !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+}
+${SCOPE} div[class*="_scrollArea"] {
+  grid-template-rows: 0 48px 0 minmax(0, 1fr) !important;
+  align-content: stretch !important;
+  overflow: hidden !important;
+}
+${SCOPE} div[class*="_scrollFade"] {
+  display: none !important;
+}
+
+/* Action cells 2-4: the panel list is the remaining three quarters, as a row of
+   three equal buttons (Plugins, Scheduled tasks, More). The left padding skips
+   the quarter occupied by the absolutely positioned New session button. */
+${SCOPE} nav[class*="_panelList"] {
+  grid-area: 2 / 2 !important;
+  display: flex !important;
+  flex-direction: row !important;
   align-items: stretch !important;
   gap: 4px !important;
+  box-sizing: border-box !important;
   height: 48px !important;
   min-width: 0 !important;
   margin: 0 !important;
-  padding: 0 !important;
+  padding: 0 0 0 calc((100% - 12px) / 4 + 4px) !important;
 }
-${SCOPE} > nav[class*="_panelList"] > button[class*="_panelRow"],
-${SCOPE} > nav[class*="_panelList"] > span[class*="_moreAnchor"] {
+${SCOPE} nav[class*="_panelList"] > div[class*="_panelEntry"],
+${SCOPE} nav[class*="_panelList"] > span[class*="_moreAnchor"] {
+  flex: 1 1 0 !important;
   min-width: 0 !important;
   height: 100% !important;
 }
-${SCOPE} > nav[class*="_panelList"] > span[class*="_moreAnchor"] {
+${SCOPE} nav[class*="_panelList"] div[class*="_panelEntry"] {
+  display: flex !important;
+  align-items: stretch !important;
+  background: transparent !important;
+  border: 0 !important;
+}
+${SCOPE} nav[class*="_panelList"] > span[class*="_moreAnchor"] {
   display: flex !important;
   flex-direction: column !important;
 }
-${SCOPE} > nav[class*="_panelList"] button[class*="_panelRow"] {
+${SCOPE} nav[class*="_panelList"] button[class*="_panelRow"] {
   box-sizing: border-box !important;
   width: 100% !important;
   height: 100% !important;
@@ -160,35 +181,49 @@ ${SCOPE} > nav[class*="_panelList"] button[class*="_panelRow"] {
   line-height: 14px !important;
   text-align: center !important;
 }
-${SCOPE} > nav[class*="_panelList"] button[class*="_panelRow"]:hover,
-${SCOPE} > nav[class*="_panelList"] button[class*="_panelRow"][class*="_panelActive"],
-${SCOPE} > nav[class*="_panelList"] button[class*="_panelRow"][aria-expanded="true"] {
-  background: var(--dsw-alias-interactive-bg-hover) !important;
+${SCOPE} nav[class*="_panelList"] div[class*="_panelEntry"]:hover,
+${SCOPE} nav[class*="_panelList"] div[class*="_panelEntry"]:hover > button[class*="_panelRow"] {
+  background-color: transparent !important;
 }
-${SCOPE} > nav[class*="_panelList"] span[class*="_panelTitle"] {
+${SCOPE} nav[class*="_panelList"] div[class*="_panelEntry"]:hover > button[class*="_panelRow"],
+${SCOPE} nav[class*="_panelList"] div[class*="_panelEntryActive"] > button[class*="_panelRow"],
+${SCOPE} nav[class*="_panelList"] button[class*="_panelRow"][aria-expanded="true"],
+${SCOPE} nav[class*="_panelList"] button[class*="_panelRow"][aria-current="page"] {
+  background-color: var(--dsw-alias-interactive-bg-hover) !important;
+}
+${SCOPE} nav[class*="_panelList"] span[class*="_panelTitle"] {
   max-width: 100% !important;
   font-size: 11px !important;
   font-weight: 400 !important;
   line-height: 14px !important;
   text-align: center !important;
 }
-
-/* The browsing region and the footer take the remaining grid rows. */
-${SCOPE} > div[class*="_regionArea"] {
-  grid-row: 3 !important;
-  grid-column: 1 / -1 !important;
-  min-height: 0 !important;
-  padding-top: 2px !important;
+${SCOPE} nav[class*="_panelList"] button[class*="_panelUnpin"] {
+  display: none !important;
 }
-${SCOPE} > div[class*="_footArea"] {
-  grid-row: 4 !important;
-  grid-column: 1 / -1 !important;
+
+/* The browsing region fills the last grid row and the workspace browser keeps
+   its own internal scrollbar (as in rc.2), just with the docked buttons row.
+   Match the browser root through its header instead of a class suffix: rc.2
+   renders other _root_<hash> elements inside the browser (the workspace
+   picker menu root), and a broad _root match would stretch those too. */
+${SCOPE} div[class*="_regionArea"] {
+  grid-area: 4 / 2 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  padding-top: 2px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+${SCOPE} div[class*="_regionArea"] div:has(> [data-sidebar-workspace-header]) {
+  flex: 1 1 auto !important;
+  max-height: none !important;
+  min-height: 0 !important;
 }
 
 /* Denser workspace browser: shorter section header, workspace and session rows. */
-${SCOPE} [class*="_sectionHeader"] {
-  height: auto !important;
-  min-height: 28px !important;
+${SCOPE} [data-sidebar-workspace-header] {
+  height: 28px !important;
   margin-top: 0 !important;
   margin-bottom: 2px !important;
 }

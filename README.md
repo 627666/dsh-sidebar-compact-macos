@@ -35,8 +35,14 @@ toggle).
 
 ## Compatibility
 
-- Tested with DeepSeek Harness **0.2.2-rc.1**.
-- `engines.dsh` is `>=0.2.2-rc.1 <0.3.0-0`.
+- Tested with DeepSeek Harness **0.2.2-rc.2**.
+- `engines.dsh` is `>=0.2.2-rc.2 <0.3.0-0`.
+- DSH 0.2.2-rc.2 moved the global panel list and the workspace browser into the
+  sidebar's new scroll area; version 1.2.0 targets that structure. The older
+  0.2.2-rc.1 sidebar layout is not supported.
+- If a DSH app update ever stops the plugin from applying, re-enable it once in the
+  plugin manager. App updates have been observed rewriting the profile's
+  `dsh.profile.bundles` list and dropping local bundles from it.
 - The overrides match the host's CSS-module class-name suffixes (`_logoRow`, `_panelRow`,
   `_sessionRow`, …) and scope themselves to the sidebar root. If a future host build
   renames those internals, the styles simply stop applying and the stock sidebar returns
