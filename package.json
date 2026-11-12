@@ -1,8 +1,8 @@
 {
   "name": "dsh-sidebar-compact-macos",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
-  "description": "For the macOS desktop app: four equal sidebar action buttons instead of the brand row, plus a denser workspace and conversation list.",
+  "description": "For the macOS desktop app: keeps the brand mark in the title-bar strip, puts four equal sidebar action buttons on one row, and tightens the workspace and conversation list.",
   "license": "MIT",
   "author": "627666",
   "repository": {

@@ -28,6 +28,7 @@ window.__ModuleLoader__.load({
     const CSS = `
 /* Grid rows: title-bar strip | four-button row | workspace region | footer. */
 ${SCOPE} {
+  position: relative !important;
   display: grid !important;
   grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
   grid-template-rows: auto auto minmax(0, 1fr) auto !important;
@@ -35,13 +36,36 @@ ${SCOPE} {
   row-gap: 0 !important;
 }
 
-/* Keep the drag / collapse strip; remove the DeepSeek Harness brand row. */
+/* Keep the drag / collapse strip in its row. */
 ${SCOPE} > div[class*="_topStrip"] {
   grid-row: 1 !important;
   grid-column: 1 / -1 !important;
 }
+
+/* Brand mark back in the title-bar strip, to the right of the traffic lights and
+   clear of the collapse toggle. Absolute so the button row below never moves. */
 ${SCOPE} > div[class*="_logoRow"] {
-  display: none !important;
+  display: flex !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 84px !important;
+  right: 50px !important;
+  height: 52px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
+}
+${SCOPE} > div[class*="_logoRow"] > span[class*="_brand"] {
+  display: inline-flex !important;
+  flex: 0 0 auto !important;
+  padding: 0 !important;
+  cursor: default !important;
+  transform: scale(0.78) !important;
+  transform-origin: left center !important;
 }
 
 /* Cell 1: New session, as a compact bordered button with icon above label. */

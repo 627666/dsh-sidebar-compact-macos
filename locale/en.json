@@ -1,6 +1,6 @@
 {
   "meta": {
     "title": "macOS compact sidebar",
-    "description": "For the macOS desktop app: replaces the sidebar brand row with one row of four equal buttons (New session, Plugins, Scheduled tasks, More) and tightens the workspace list so more conversations fit. Browser and Windows layouts are left untouched."
+    "description": "For the macOS desktop app: keeps the DeepSeek Harness brand mark in the title-bar strip, puts New session, Plugins, Scheduled tasks and More on one row of four equal buttons, and tightens the workspace and conversation spacing so more conversations fit."
   }
 }

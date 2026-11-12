@@ -1,18 +1,22 @@
 # dsh-sidebar-compact-macos
 
 A small **macOS desktop** UI plugin for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness).
-It keeps the sidebar's four existing actions, but puts them on one compact row and
-removes the brand row, so the workspace and conversation list gets the vertical
-space instead.
+It keeps the brand mark and the sidebar's four existing actions: the brand moves into the
+window title-bar strip (to the right of the traffic lights), the four actions become one
+row of equal buttons, and the list below gets the vertical space that the stacked rows
+used to take.
 
 ![Before and after](assets/screenshot-compare.png)
 
-![The four equal buttons](assets/screenshot-top.png)
+![Brand in the title bar and the four equal buttons](assets/screenshot-top.png)
 
 ## What it changes
 
-- **Drops the brand row** (`deepseek HARNESS`) from the expanded sidebar. The native
-  window-chrome strip above it is kept, because it carries the sidebar collapse toggle.
+- **Moves the brand into the title-bar strip** (`deepseek HARNESS`): the mark and wordmark
+  now sit to the right of the traffic lights and left of the sidebar collapse toggle,
+  scaled to fit the 52 px strip. It is positioned absolutely, so the button row below does
+  not move; it is decorative (`pointer-events: none`) and never blocks dragging or the
+  toggle.
 - **One row of four equal, bordered buttons:** New session, Plugins, Scheduled tasks and
   More. Each keeps its original host element, handler, shortcut, selected state and menu —
   only the layout and the icon/label sizing are overridden.
