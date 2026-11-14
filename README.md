@@ -35,11 +35,13 @@ toggle).
 
 ## Compatibility
 
-- Tested with DeepSeek Harness **0.2.2-rc.2**.
+- Tested with DeepSeek Harness **0.2.2-rc.3**; the 0.2.2-rc.2 layout is also
+  supported.
 - `engines.dsh` is `>=0.2.2-rc.2 <0.3.0-0`.
 - DSH 0.2.2-rc.2 moved the global panel list and the workspace browser into the
-  sidebar's new scroll area; version 1.2.0 targets that structure. The older
-  0.2.2-rc.1 sidebar layout is not supported.
+  sidebar's new scroll area, and 0.2.2-rc.3 wrapped the New session button in a
+  `newSessionRow` slot. Both shapes are handled. The older 0.2.2-rc.1 sidebar
+  layout is not supported.
 - If a DSH app update ever stops the plugin from applying, re-enable it once in the
   plugin manager. App updates have been observed rewriting the profile's
   `dsh.profile.bundles` list and dropping local bundles from it.

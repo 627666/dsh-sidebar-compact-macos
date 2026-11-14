@@ -1,7 +1,7 @@
 /**
  * Client half of the sidebar-compact plugin.
  *
- * DeepSeek Harness 0.2.2-rc.2 restructured the expanded sidebar: the panel list
+ * DeepSeek Harness 0.2.2-rc.2 and rc.3 restructured the expanded sidebar: the panel list
  * and the workspace browser now live inside a `scrollRegion` / `scrollArea`
  * grid instead of being direct children of the sidebar column. This version
  * targets that layout:
@@ -62,8 +62,8 @@ ${SCOPE} > div[class*="_logoRow"] > span[class*="_brand"] {
   transform-origin: left center !important;
 }
 
-/* Action cell 1: New session, overlaid on the first quarter of the fixed action
-   row (top 52 px = below the title-bar strip; width = one of four grid cells). */
+/* Action cell 1 on 0.2.2-rc.2: the New session button is a direct child of the
+   sidebar column. (rc.3 wraps it in the row below, so this block is inert there.) */
 ${SCOPE} > button[class*="_newSession"] {
   position: absolute !important;
   top: 52px !important;
@@ -112,6 +112,77 @@ ${SCOPE} > button[class*="_newSession"] span[class*="_newSessionShortcut"] {
   display: none !important;
 }
 ${SCOPE} > button[class*="_newSession"]:hover {
+  background: var(--dsw-alias-interactive-bg-hover) !important;
+}
+
+/* Action cell 1: New session. Since rc.3 the button sits inside a
+   newSessionRow wrapper (the sidebar.session.action HOC slot). Position the
+   wrapper in the first quarter of the fixed action row and let the inner button
+   fill it. */
+${SCOPE} > div[class*="_newSessionRow"] {
+  position: absolute !important;
+  top: 52px !important;
+  left: 8px !important;
+  width: calc((100% - 28px) / 4) !important;
+  height: 48px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: stretch !important;
+  gap: 0 !important;
+  z-index: 3 !important;
+}
+${SCOPE} > div[class*="_newSessionRow"] > [data-slot] {
+  display: flex !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+}
+${SCOPE} > div[class*="_newSessionRow"] button[class*="_newSession"] {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 2px 4px !important;
+  border: 0.5px solid var(--dsw-alias-border-l3) !important;
+  border-radius: var(--dsw-radius-md) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--dsw-alias-label-primary) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 2px !important;
+  overflow: hidden !important;
+}
+${SCOPE} > div[class*="_newSessionRow"] button[class*="_newSession"] > span[class*="_newSessionLabelMask"] {
+  flex: 0 0 auto !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+${SCOPE} > div[class*="_newSessionRow"] button[class*="_newSession"] span[class*="_newSessionContent"] {
+  width: 100% !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 2px !important;
+}
+${SCOPE} > div[class*="_newSessionRow"] button[class*="_newSession"] span[class*="_newSessionContent"] > svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+${SCOPE} > div[class*="_newSessionRow"] button[class*="_newSession"] span[class*="_newSessionLabel"] {
+  max-width: 100% !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  line-height: 14px !important;
+}
+${SCOPE} > div[class*="_newSessionRow"] button[class*="_newSession"] span[class*="_newSessionShortcut"] {
+  display: none !important;
+}
+${SCOPE} > div[class*="_newSessionRow"] button[class*="_newSession"]:hover {
   background: var(--dsw-alias-interactive-bg-hover) !important;
 }
 
