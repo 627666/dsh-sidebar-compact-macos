@@ -1,6 +1,6 @@
 {
   "name": "dsh-sidebar-compact-macos",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "type": "module",
   "description": "For the macOS desktop app: keeps the brand mark in the title-bar strip, puts four equal sidebar action buttons on one row, and tightens the workspace and conversation list.",
   "license": "MIT",

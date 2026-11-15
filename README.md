@@ -2,9 +2,10 @@
 
 A small **macOS desktop** UI plugin for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness).
 It keeps the brand mark and the sidebar's four existing actions: the brand moves into the
-window title-bar strip (to the right of the traffic lights), the four actions become one
-row of equal buttons, and the list below gets the vertical space that the stacked rows
-used to take.
+window title-bar strip (to the right of the traffic lights), the New session button keeps
+its native full-width row, the Plugins / Scheduled tasks / More actions become one row of
+three equal buttons below it, and the workspace list below gets the vertical space that
+the stacked rows used to take.
 
 ![Before and after](assets/screenshot-compare.png)
 
@@ -17,9 +18,11 @@ used to take.
   scaled to fit the 52 px strip. It is positioned absolutely, so the button row below does
   not move; it is decorative (`pointer-events: none`) and never blocks dragging or the
   toggle.
-- **One row of four equal, bordered buttons:** New session, Plugins, Scheduled tasks and
-  More. Each keeps its original host element, handler, shortcut, selected state and menu —
-  only the layout and the icon/label sizing are overridden.
+- **New session stays native:** the host's full-width New session button keeps its own
+  row and styling.
+- **One row of three equal, bordered buttons below it:** Plugins, Scheduled tasks and More.
+  Each keeps its original host element, handler, shortcut, selected state and menu — only
+  the layout and the icon/label sizing are overridden.
 - **Tightens the list:** the workspace section header goes from 36 px to 28 px, workspace
   rows from 34 px to 30 px, conversation rows from 32 px to 28 px, with smaller gaps
   between rows. Together with the header change the sidebar fits roughly 5–8 more

@@ -1,23 +1,22 @@
 /**
  * Client half of the sidebar-compact plugin.
  *
- * DeepSeek Harness 0.2.2-rc.2 and rc.3 restructured the expanded sidebar: the panel list
- * and the workspace browser now live inside a `scrollRegion` / `scrollArea`
+ * DeepSeek Harness 0.2.2-rc.2/rc.3 restructured the expanded sidebar: the panel
+ * list and the workspace browser live inside a `scrollRegion` / `scrollArea`
  * grid instead of being direct children of the sidebar column. This version
  * targets that layout:
  *
  *  - the brand mark is absolutely positioned in the 52 px title-bar strip, to
  *    the right of the native traffic lights and left of the collapse toggle;
- *  - the action row is rebuilt as a fixed 48 px grid row inside the sidebar's
- *    new scroll area: New session is absolutely overlaid on the first quarter,
- *    and the panel list is offset by that quarter and laid out as three equal
- *    buttons (Plugins, Scheduled tasks, More);
+ *  - the New session button keeps the host's own full-width style and row;
+ *  - the panel list below it becomes one row of three equal compact buttons
+ *    (Plugins, Scheduled tasks, More) inside the sidebar's new scroll area;
  *  - the workspace browser below keeps its own scroll container and only gets
  *    denser spacing.
  *
  * Every control keeps its original host element, handler, locale string and
  * accessibility wiring, so behavior cannot drift. Selectors use stable local
- * class-name suffixes (for example `_panelRow`) and the rc.2 workspace header's
+ * class-name suffixes (for example `_panelRow`) and the workspace header's
  * data attribute; if a future host build renames those, the overrides stop
  * applying and the stock sidebar returns, which is a safe fallback.
  *
@@ -62,134 +61,10 @@ ${SCOPE} > div[class*="_logoRow"] > span[class*="_brand"] {
   transform-origin: left center !important;
 }
 
-/* Action cell 1 on 0.2.2-rc.2: the New session button is a direct child of the
-   sidebar column. (rc.3 wraps it in the row below, so this block is inert there.) */
-${SCOPE} > button[class*="_newSession"] {
-  position: absolute !important;
-  top: 52px !important;
-  left: 8px !important;
-  width: calc((100% - 28px) / 4) !important;
-  height: 48px !important;
-  min-height: 0 !important;
-  margin: 0 !important;
-  padding: 2px 4px !important;
-  border: 0.5px solid var(--dsw-alias-border-l3) !important;
-  border-radius: var(--dsw-radius-md) !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  color: var(--dsw-alias-label-primary) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  align-items: center !important;
-  gap: 2px !important;
-  overflow: hidden !important;
-  z-index: 3 !important;
-}
-${SCOPE} > button[class*="_newSession"] > span[class*="_newSessionLabelMask"] {
-  flex: 0 0 auto !important;
-  width: 100% !important;
-  min-width: 0 !important;
-}
-${SCOPE} > button[class*="_newSession"] span[class*="_newSessionContent"] {
-  width: 100% !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  align-items: center !important;
-  gap: 2px !important;
-}
-${SCOPE} > button[class*="_newSession"] span[class*="_newSessionContent"] > svg {
-  width: 16px !important;
-  height: 16px !important;
-}
-${SCOPE} > button[class*="_newSession"] span[class*="_newSessionLabel"] {
-  max-width: 100% !important;
-  font-size: 11px !important;
-  font-weight: 500 !important;
-  line-height: 14px !important;
-}
-${SCOPE} > button[class*="_newSession"] span[class*="_newSessionShortcut"] {
-  display: none !important;
-}
-${SCOPE} > button[class*="_newSession"]:hover {
-  background: var(--dsw-alias-interactive-bg-hover) !important;
-}
-
-/* Action cell 1: New session. Since rc.3 the button sits inside a
-   newSessionRow wrapper (the sidebar.session.action HOC slot). Position the
-   wrapper in the first quarter of the fixed action row and let the inner button
-   fill it. */
-${SCOPE} > div[class*="_newSessionRow"] {
-  position: absolute !important;
-  top: 52px !important;
-  left: 8px !important;
-  width: calc((100% - 28px) / 4) !important;
-  height: 48px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  display: flex !important;
-  align-items: stretch !important;
-  gap: 0 !important;
-  z-index: 3 !important;
-}
-${SCOPE} > div[class*="_newSessionRow"] > [data-slot] {
-  display: flex !important;
-  width: 100% !important;
-  height: 100% !important;
-  min-width: 0 !important;
-}
-${SCOPE} > div[class*="_newSessionRow"] button[class*="_newSession"] {
-  box-sizing: border-box !important;
-  width: 100% !important;
-  height: 100% !important;
-  min-height: 0 !important;
-  margin: 0 !important;
-  padding: 2px 4px !important;
-  border: 0.5px solid var(--dsw-alias-border-l3) !important;
-  border-radius: var(--dsw-radius-md) !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  color: var(--dsw-alias-label-primary) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  align-items: center !important;
-  gap: 2px !important;
-  overflow: hidden !important;
-}
-${SCOPE} > div[class*="_newSessionRow"] button[class*="_newSession"] > span[class*="_newSessionLabelMask"] {
-  flex: 0 0 auto !important;
-  width: 100% !important;
-  min-width: 0 !important;
-}
-${SCOPE} > div[class*="_newSessionRow"] button[class*="_newSession"] span[class*="_newSessionContent"] {
-  width: 100% !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  align-items: center !important;
-  gap: 2px !important;
-}
-${SCOPE} > div[class*="_newSessionRow"] button[class*="_newSession"] span[class*="_newSessionContent"] > svg {
-  width: 16px !important;
-  height: 16px !important;
-}
-${SCOPE} > div[class*="_newSessionRow"] button[class*="_newSession"] span[class*="_newSessionLabel"] {
-  max-width: 100% !important;
-  font-size: 11px !important;
-  font-weight: 500 !important;
-  line-height: 14px !important;
-}
-${SCOPE} > div[class*="_newSessionRow"] button[class*="_newSession"] span[class*="_newSessionShortcut"] {
-  display: none !important;
-}
-${SCOPE} > div[class*="_newSessionRow"] button[class*="_newSession"]:hover {
-  background: var(--dsw-alias-interactive-bg-hover) !important;
-}
-
-/* The new rc.2 scrolling shell: give it exactly two rows — the 48 px action row
-   and the browsing region — and keep the scrollbar for the workspace list. */
+/* The New session button keeps the host's native full-width row; nothing is
+   overridden here. The panel list gets its own fixed 48 px row below it. */
 ${SCOPE} > div[class*="_scrollRegion"] {
-  margin-top: 0 !important;
+  margin-top: 6px !important;
   flex: 1 1 auto !important;
   min-height: 0 !important;
 }
@@ -202,9 +77,7 @@ ${SCOPE} div[class*="_scrollFade"] {
   display: none !important;
 }
 
-/* Action cells 2-4: the panel list is the remaining three quarters, as a row of
-   three equal buttons (Plugins, Scheduled tasks, More). The left padding skips
-   the quarter occupied by the absolutely positioned New session button. */
+/* Panel row: Plugins, Scheduled tasks and More as three equal buttons. */
 ${SCOPE} nav[class*="_panelList"] {
   grid-area: 2 / 2 !important;
   display: flex !important;
@@ -215,7 +88,7 @@ ${SCOPE} nav[class*="_panelList"] {
   height: 48px !important;
   min-width: 0 !important;
   margin: 0 !important;
-  padding: 0 0 0 calc((100% - 12px) / 4 + 4px) !important;
+  padding: 0 !important;
 }
 ${SCOPE} nav[class*="_panelList"] > div[class*="_panelEntry"],
 ${SCOPE} nav[class*="_panelList"] > span[class*="_moreAnchor"] {
@@ -274,9 +147,9 @@ ${SCOPE} nav[class*="_panelList"] button[class*="_panelUnpin"] {
 }
 
 /* The browsing region fills the last grid row and the workspace browser keeps
-   its own internal scrollbar (as in rc.2), just with the docked buttons row.
-   Match the browser root through its header instead of a class suffix: rc.2
-   renders other _root_<hash> elements inside the browser (the workspace
+   its own internal scrollbar, just with the docked panel row above it.
+   Match the browser root through its header instead of a class suffix: the
+   host renders other _root_<hash> elements inside the browser (the workspace
    picker menu root), and a broad _root match would stretch those too. */
 ${SCOPE} div[class*="_regionArea"] {
   grid-area: 4 / 2 !important;
